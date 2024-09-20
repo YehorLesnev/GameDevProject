@@ -16,7 +16,7 @@ AJungle_Character::AJungle_Character()
 	check(Camera != nullptr);
 	Camera->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
 	Camera->bUsePawnControlRotation = true;
-	GetMesh()->SetupAttachment(Camera);
+	RootComponent->SetupAttachment(Camera);
 	 
 	// Movement setup
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
