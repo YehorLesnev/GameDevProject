@@ -29,6 +29,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+		USkeletalMeshComponent* Mesh1P;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* Camera;
+
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Replicated, Category = "State")
 		TArray<class AJungle_Weapon*> Weapons;
 
@@ -45,8 +53,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Cahracter")
 		virtual void EquipWeapon(const int32 Index);
 public:
-	UPROPERTY(EditAnywhere)
-		class UCameraComponent* Camera;
 
 	//UPROPERTY(EditAnywhere)
 	//	class USkeletalMeshComponent* GunSkeletalMeshComponent;

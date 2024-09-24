@@ -14,13 +14,24 @@ AJungle_Character::AJungle_Character()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Camera setup
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
-	check(Camera != nullptr);
-	Camera->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
+	// Set size for collision capsule
+	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+
+	// Create a CameraComponent	
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	Camera->SetupAttachment(GetCapsuleComponent());
+	Camera->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
 	Camera->bUsePawnControlRotation = true;
-	Camera->SetupAttachment(GetMesh(), FName("Head"));
-	 
+
+	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P->SetOnlyOwnerSee(true);
+	Mesh1P->SetupAttachment(Camera);
+	Mesh1P->bCastDynamicShadow = false;
+	Mesh1P->CastShadow = false;
+	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
+	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
 	// Movement setup
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
 	GetCharacterMovement()->bCanWalkOffLedgesWhenCrouching = true;
@@ -91,11 +102,10 @@ void AJungle_Character::OnRep_CurrentWeapon(const AJungle_Weapon* OldWeapon)
 	{
 		if (!CurrentWeapon->CurrentOwner) 
 		{
-			const FTransform& PlacementTransform = CurrentWeapon->PlacementTransform * GetMesh()->GetSocketTransform(FName("Weapon_R"));
+			const FTransform& PlacementTransform = CurrentWeapon->PlacementTransform * Mesh1P->GetSocketTransform(FName("GripPoint"));
 
 			CurrentWeapon->SetActorTransform(PlacementTransform, false, nullptr, ETeleportType::TeleportPhysics);
-			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepWorldTransform, FName("Weapon_R"));
-			
+			CurrentWeapon->AttachToComponent(Mesh1P, FAttachmentTransformRules::KeepWorldTransform, FName("GripPoint"));
 			CurrentWeapon->CurrentOwner = this;
 		}
 
