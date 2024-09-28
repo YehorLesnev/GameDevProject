@@ -13,7 +13,7 @@ struct FIKProperties
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 		class UAnimSequence* AnimPose;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -48,14 +48,34 @@ public:
 		FIKProperties IKProperties;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+		bool IsAutomatic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+		float FireRate = 0.1f;  // Fire rate in seconds (0.1 = 10 rounds per second)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 		FTransform PlacementTransform;
 
-	void Fire();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		USoundBase* FireSound;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon")
+	// Fire control
+	FTimerHandle FireTimerHandle; // Timer handle for automatic fire
+	bool bIsFiring = false; // To track if the weapon is firing
+
+	void Fire();
+	void StartFire();
+	void StopFire();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 		TSubclassOf<class AJungle_Bullet> BulletClass;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 		FVector MuzzleOffset;
 
+
+private:
+	void HandleFiring();
+
+	void SingleFire();
 };

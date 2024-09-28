@@ -29,18 +29,11 @@ AJungle_Character::AJungle_Character()
 	Mesh1P->SetupAttachment(Camera);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	// Movement setup
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
 	GetCharacterMovement()->bCanWalkOffLedgesWhenCrouching = true;
-
-	// Gun setup
-	/*GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Skeletal Mesh"));
-	GunSkeletalMeshComponent->bCastDynamicShadow = false;
-	GunSkeletalMeshComponent->CastShadow = false;
-	GunSkeletalMeshComponent->SetupAttachment(Camera);*/
 }
 
 // Called when the game starts or when spawned
@@ -66,8 +59,6 @@ void AJungle_Character::BeginPlay()
 			}
 		}
 	}
-
-	//GunSkeletalMeshComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("WeaponGripPoint"));
 }
 
 // Called every frame
@@ -94,13 +85,15 @@ void AJungle_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AJungle_Character::NextWeapon);
 	PlayerInputComponent->BindAction("LastWeapon", IE_Pressed, this, &AJungle_Character::LastWeapon);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AJungle_Character::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AJungle_Character::StartFiringWeapon);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AJungle_Character::StopFiringWeapon);
 }
 
 void AJungle_Character::OnRep_CurrentWeapon(const AJungle_Weapon* OldWeapon)
 {
 	if (CurrentWeapon)
 	{
-		if (!CurrentWeapon->CurrentOwner) 
+		if (!CurrentWeapon->CurrentOwner)
 		{
 			const FTransform& PlacementTransform = CurrentWeapon->PlacementTransform * Mesh1P->GetSocketTransform(FName("GripPoint"));
 
@@ -146,7 +139,7 @@ void AJungle_Character::EquipWeapon(const int32 Index)
 		CurrentWeapon = Weapons[Index];
 		OnRep_CurrentWeapon(OldWeapon);
 	}
-	else if(!HasAuthority())
+	else if (!HasAuthority())
 	{
 		Server_SetCurrentWeapon_Implementation(Weapons[Index]);
 	}
@@ -207,39 +200,27 @@ void AJungle_Character::StopCrouch()
 	GetCharacterMovement()->bWantsToCrouch = false;
 	GetCharacterMovement()->UnCrouch();
 }
-//
-//void AJungle_Character::FireWeapon()
-//{
-//	if (CurrentWeapon)
-//		CurrentWeapon->Fire();
-//}
-
 
 void AJungle_Character::Fire()
 {
-	if (BulletClass)
+	if (CurrentWeapon)
 	{
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
+		CurrentWeapon->Fire();
+	}
+}
 
-		// Spawn bullet at weapon's muzzle location
-		FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-		FRotator MuzzleRotation = CameraRotation;
+void AJungle_Character::StartFiringWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StartFire();
+	}
+}
 
-		// Spawn bullet
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
-		SpawnParams.Instigator = GetInstigator();
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		AJungle_Bullet* SpawnedBullet = GetWorld()->SpawnActor<AJungle_Bullet>(BulletClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-
-		if (SpawnedBullet)
-		{
-			// Set initial velocity of the bullet
-			FVector LaunchDirection = MuzzleRotation.Vector();
-			SpawnedBullet->FireInDirection(LaunchDirection);
-		}
+void AJungle_Character::StopFiringWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopFire();
 	}
 }

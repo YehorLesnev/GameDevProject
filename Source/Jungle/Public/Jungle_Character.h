@@ -83,10 +83,6 @@ public:
 	void StopCrouch();
 
 	void Fire();
-
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-		TSubclassOf<class AJungle_Bullet> BulletClass;
-
-	UPROPERTY(EditAnywhere, Category = "Weapon")
-		FVector MuzzleOffset;
+	void StartFiringWeapon();
+	void StopFiringWeapon();
 };
