@@ -4,7 +4,10 @@
 #include "Jungle_Weapon.h"
 #include "Jungle_Character.h"
 #include "Camera/CameraComponent.h"
+#include "Misc/OutputDeviceNull.h"
+#include "Jungle_HUD_Widget.h"
 #include "Kismet/GameplayStatics.h"
+
 AJungle_Weapon::AJungle_Weapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -24,11 +27,13 @@ void AJungle_Weapon::BeginPlay()
 
 	if(!CurrentOwner)
 		Mesh->SetVisibility(false);
+
+	CurrentAmmoCount = MaxAmmo;
 }
 
 void AJungle_Weapon::SingleFire()
 {
-	if (BulletClass && CurrentOwner)
+	if (CurrentAmmoCount > 0 && BulletClass && CurrentOwner)
 	{
 		// Declare some required params
 		const float traceDistance = 5000.f;
@@ -112,6 +117,16 @@ void AJungle_Weapon::SingleFire()
 		 
 			SpawnedBullet->FireInDirection(direction);
 		}
+
+		if (CurrentAmmoCount <= 0)
+		{
+			CurrentAmmoCount = 0;
+			return;
+		}
+
+		--CurrentAmmoCount;
+
+		SetAmmoPercentage();
 	}
 }
 
@@ -160,4 +175,28 @@ void AJungle_Weapon::Fire()
 		return;
 
 	SingleFire();
+}
+
+void AJungle_Weapon::SetAmmoPercentage()
+{
+	float percentage = (float)CurrentAmmoCount / (float)MaxAmmo;
+
+	if (CurrentOwner)
+	{
+		AJungle_Character* OwnerCharacter = Cast<AJungle_Character>(CurrentOwner);
+		if (OwnerCharacter)
+		{
+			OwnerCharacter->OnFire.Broadcast(percentage);
+
+			// Call the HUD update function
+			if (UJungle_HUD_Widget* JungleHUD = Cast<UJungle_HUD_Widget>(CurrentOwner->HUDWidget))
+			{
+				JungleHUD->UpdateAmmoBar(percentage);
+			}
+
+			FOutputDeviceNull ar;
+			const FString command = FString::Printf(TEXT("UpdateAmmoBar %f"), percentage);
+			OwnerCharacter->HUDWidget->CallFunctionByNameWithArguments(*command, ar, NULL, true);
+		}
+	}
 }

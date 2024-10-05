@@ -52,6 +52,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 		float FireRate = 0.1f;  // Fire rate in seconds (0.1 = 10 rounds per second)
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+		int MaxAmmo = 30;  
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 		FTransform PlacementTransform;
@@ -74,8 +77,11 @@ public:
 		FVector MuzzleOffset;
 
 
+	void SetAmmoPercentage();
 private:
 	void HandleFiring();
 
 	void SingleFire();
+
+	int CurrentAmmoCount;
 };

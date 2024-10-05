@@ -4,7 +4,11 @@
 #include "GameFramework/Character.h"
 #include "Jungle_Bullet.h"
 #include "Jungle_Weapon.h"
+#include "Jungle_HUD_Widget.h"
+#include "Blueprint/UserWidget.h"
 #include "Jungle_Character.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFireDelegate, float, AmmoPercentage);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCurrectWeaponChangedDelegate, class AJungle_Weapon*, CurrentWeapon, const class AJungle_Weapon*, OldWeapon);
 
@@ -52,6 +56,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Cahracter")
 		virtual void EquipWeapon(const int32 Index);
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+		FOnFireDelegate OnFire;
+
+	// Widget class to use for HUD
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+		TSubclassOf<UJungle_HUD_Widget> HUDWidgetClass;
+
+	// Pointer to the active HUD
+	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+		UJungle_HUD_Widget* HUDWidget;
 public:
 
 	//UPROPERTY(EditAnywhere)

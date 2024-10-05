@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Jungle_Weapon.h"
 #include "Net/UnrealNetwork.h"
+
 #include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
@@ -40,6 +41,16 @@ AJungle_Character::AJungle_Character()
 void AJungle_Character::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Create and add the HUD widget to the viewport
+	if (HUDWidgetClass)
+	{
+		HUDWidget = CreateWidget<UJungle_HUD_Widget>(GetWorld(), HUDWidgetClass);
+		if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
+		}
+	}
 
 	if (HasAuthority())
 	{
@@ -138,17 +149,22 @@ void AJungle_Character::EquipWeapon(const int32 Index)
 		CurrentIndex = Index;
 		CurrentWeapon = Weapons[Index];
 		OnRep_CurrentWeapon(OldWeapon);
+		CurrentWeaponChangedDelegate.Broadcast(CurrentWeapon, OldWeapon);
+		CurrentWeapon->SetAmmoPercentage();
+
 	}
 	else if (!HasAuthority())
 	{
 		Server_SetCurrentWeapon_Implementation(Weapons[Index]);
 	}
+
 }
 
 void AJungle_Character::NextWeapon()
 {
 	const int32 Index = Weapons.IsValidIndex(CurrentIndex + 1) ? CurrentIndex + 1 : 0;
 	EquipWeapon(Index);
+
 }
 
 void AJungle_Character::LastWeapon()
