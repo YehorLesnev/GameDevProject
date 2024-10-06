@@ -63,7 +63,7 @@ public:
 		USoundBase* FireSound;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
-		UAnimMontage* ReloadAnimation;
+		float ReloadAnimationLength = 2.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 		USoundBase* ReloadSound;

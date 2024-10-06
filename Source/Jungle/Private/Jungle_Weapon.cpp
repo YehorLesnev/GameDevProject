@@ -210,37 +210,28 @@ void AJungle_Weapon::Reload()
 
 	bIsReloading = true;
 	
-	if (CurrentOwner && ReloadAnimation)
+	if (CurrentOwner)
 	{
 		CurrentOwner->IsReloading = true;
 
-		if (ReloadAnimation)
-		{
-			FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
+			/*FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
 			FRotator CurrentRotation = CurrentOwner->Mesh1P->GetRelativeRotation();
 
-			/*FVector LocationOffset = FVector(0.0f, 0.0f, -30.0f);
-			FRotator RotationOffset = FRotator(0.0f, -90.0f, 0.0f); 
-
-			CurrentOwner->Mesh1P->SetRelativeLocation(CurrentLocation + LocationOffset);
-			CurrentOwner->Mesh1P->SetRelativeRotation(CurrentRotation + RotationOffset);*/
-			//CurrentOwner->Mesh1P->PlayAnimation(ReloadAnimation, false);
 			UAnimInstance* AnimInstance = CurrentOwner->Mesh1P->GetAnimInstance();
 			if (AnimInstance)
 			{
 				
 				AnimInstance->Montage_Play(ReloadAnimation);
 				AnimInstance->Montage_JumpToSection("Default", ReloadAnimation);
-			}
+			}*/
 
 			if (ReloadSound != nullptr)
 				UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, CurrentOwner->GetActorLocation());
 
-			float AnimationLength = ReloadAnimation->GetPlayLength();
+			float reloadLength = ReloadAnimationLength;
 
 			FTimerHandle ReloadTimerHandle;
-			CurrentOwner->GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &AJungle_Weapon::FinishReload, AnimationLength, false);
-		}
+			CurrentOwner->GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &AJungle_Weapon::FinishReload, reloadLength, false);
 	}
 	else
 	{
@@ -254,14 +245,11 @@ void AJungle_Weapon::Reload()
 
 void AJungle_Weapon::FinishReload()
 {
-	FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
+	/*FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
 	FRotator CurrentRotation = CurrentOwner->Mesh1P->GetRelativeRotation();
 
 	FVector LocationOffset = FVector(90.0f, 0.0f, 60.0f);
-	FRotator RotationOffset = FRotator(0.0f, 90.0f, 0.0f);
-
-	//CurrentOwner->Mesh1P->SetRelativeLocation(CurrentLocation);
-	//CurrentOwner->Mesh1P->SetRelativeRotation(CurrentRotation);
+	FRotator RotationOffset = FRotator(0.0f, 90.0f, 0.0f);*/
 
 	CurrentAmmoCount = MaxAmmo;
 	SetAmmoPercentage();
