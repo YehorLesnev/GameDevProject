@@ -46,8 +46,8 @@ AJungle_Bullet::AJungle_Bullet()
 
 	// Enable sub-stepping to handle fast movement
 	ProjectileMovementComponent->bForceSubStepping = true;
-	ProjectileMovementComponent->MaxSimulationTimeStep = 0.005f;  // Increase accuracy with smaller time step
-	ProjectileMovementComponent->MaxSimulationIterations = 16;    // Increase the number of iterations for simulation
+	ProjectileMovementComponent->MaxSimulationTimeStep = 0.0005f;  // Increase accuracy with smaller time step
+	ProjectileMovementComponent->MaxSimulationIterations = 32;    // Increase the number of iterations for simulation
 
 	ProjectileMovementComponent->bSweepCollision = true;
 

@@ -35,6 +35,8 @@ AJungle_Character::AJungle_Character()
 	// Movement setup
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
 	GetCharacterMovement()->bCanWalkOffLedgesWhenCrouching = true;
+
+	CurrentHealth = MaxHealth;
 }
 
 // Called when the game starts or when spawned
@@ -163,6 +165,8 @@ void AJungle_Character::EquipWeapon(const int32 Index)
 
 void AJungle_Character::NextWeapon()
 {
+	if (IsReloading) return;
+
 	const int32 Index = Weapons.IsValidIndex(CurrentIndex + 1) ? CurrentIndex + 1 : 0;
 	EquipWeapon(Index);
 
@@ -170,6 +174,8 @@ void AJungle_Character::NextWeapon()
 
 void AJungle_Character::LastWeapon()
 {
+	if (IsReloading) return;
+
 	const int32 Index = Weapons.IsValidIndex(CurrentIndex - 1) ? CurrentIndex - 1 : Weapons.Num() - 1;
 	EquipWeapon(Index);
 }
