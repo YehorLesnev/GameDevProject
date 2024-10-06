@@ -62,9 +62,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 		USoundBase* FireSound;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+		UAnimMontage* ReloadAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		USoundBase* ReloadSound;
+
+		void Reload();
+
+		void FinishReload();
+
 	// Fire control
 	FTimerHandle FireTimerHandle; // Timer handle for automatic fire
 	bool bIsFiring = false; // To track if the weapon is firing
+	bool bIsReloading = false;
 
 	void Fire();
 	void StartFire();

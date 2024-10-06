@@ -67,6 +67,9 @@ public:
 	// Pointer to the active HUD
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
 		UJungle_HUD_Widget* HUDWidget;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "State")
+		bool IsReloading;
 public:
 
 	//UPROPERTY(EditAnywhere)
@@ -100,4 +103,6 @@ public:
 	void Fire();
 	void StartFiringWeapon();
 	void StopFiringWeapon();
+
+	void Reload();
 };

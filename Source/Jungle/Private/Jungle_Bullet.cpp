@@ -77,18 +77,26 @@ void AJungle_Bullet::Tick(float DeltaTime)
 		FVector BaseVelocity = ProjectileMovementComponent->Velocity * DeltaTime;
 		FVector NextLocation = CurrentLocation + BaseVelocity;
 
-
 		// Update spiral angle
 		SpiralAngle += SpiralSpeed * DeltaTime; // Increment angle based on SpiralSpeed
 
-		// Calculate offset for spiral motion
+		// Calculate offset for spiral motion in local space
 		float SpiralOffsetX = FMath::Cos(FMath::DegreesToRadians(SpiralAngle)) * SpiralRadius;
 		float SpiralOffsetY = FMath::Sin(FMath::DegreesToRadians(SpiralAngle)) * SpiralRadius;
+		float SpiralOffsetZ = FMath::Sin(FMath::DegreesToRadians(SpiralAngle * 0.5f)) * SpiralRadius * 0.5f; // Scaled down for a smoother Z movement
 
-		// Add the spiral offset while maintaining the forward direction
-		NextLocation += FVector(SpiralOffsetX, SpiralOffsetY, SpiralOffsetX); 
+		// Construct the spiral offset vector
+		FVector SpiralOffset(SpiralOffsetX, SpiralOffsetY, SpiralOffsetZ);
 
+		// Rotate the offset to match the projectile's forward direction
+		FVector ForwardDirection = ProjectileMovementComponent->Velocity.GetSafeNormal();
+		FVector RightVector = FRotationMatrix(ForwardDirection.Rotation()).GetScaledAxis(EAxis::Y);
+		FVector UpVector = FRotationMatrix(ForwardDirection.Rotation()).GetScaledAxis(EAxis::Z);
 
+		// Apply the spiral offset relative to the forward direction
+		NextLocation += RightVector * SpiralOffsetX + UpVector * SpiralOffsetY;
+
+		// Set the new location
 		SetActorLocation(NextLocation);
 	}
 }

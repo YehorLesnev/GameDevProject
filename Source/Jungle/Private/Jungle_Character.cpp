@@ -98,6 +98,7 @@ void AJungle_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AJungle_Character::Fire);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AJungle_Character::StartFiringWeapon);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AJungle_Character::StopFiringWeapon);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AJungle_Character::Reload);
 }
 
 void AJungle_Character::OnRep_CurrentWeapon(const AJungle_Weapon* OldWeapon)
@@ -238,5 +239,13 @@ void AJungle_Character::StopFiringWeapon()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->StopFire();
+	}
+}
+
+void AJungle_Character::Reload()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Reload();
 	}
 }
