@@ -22,7 +22,7 @@ protected:
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-		TSubclassOf<class AJungle_Enemy> BaseEnemyBP;
+		TSubclassOf<class AActor> BaseEnemyBP;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

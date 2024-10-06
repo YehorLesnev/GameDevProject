@@ -25,7 +25,7 @@ void AJungle_SpawnEnemiesManager::BeginPlay()
 
 	for (AActor* TargetPoint : TargetPoints)
 	{
-		GetWorld()->SpawnActor<AJungle_Enemy>(BaseEnemyBP, TargetPoint->GetActorTransform(), SpawnParams);
+		GetWorld()->SpawnActor<AActor>(BaseEnemyBP, TargetPoint->GetActorTransform(), SpawnParams);
 	}
 }
 
