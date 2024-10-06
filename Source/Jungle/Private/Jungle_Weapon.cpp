@@ -214,17 +214,6 @@ void AJungle_Weapon::Reload()
 	{
 		CurrentOwner->IsReloading = true;
 
-			/*FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
-			FRotator CurrentRotation = CurrentOwner->Mesh1P->GetRelativeRotation();
-
-			UAnimInstance* AnimInstance = CurrentOwner->Mesh1P->GetAnimInstance();
-			if (AnimInstance)
-			{
-				
-				AnimInstance->Montage_Play(ReloadAnimation);
-				AnimInstance->Montage_JumpToSection("Default", ReloadAnimation);
-			}*/
-
 			if (ReloadSound != nullptr)
 				UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, CurrentOwner->GetActorLocation());
 
@@ -245,12 +234,6 @@ void AJungle_Weapon::Reload()
 
 void AJungle_Weapon::FinishReload()
 {
-	/*FVector CurrentLocation = CurrentOwner->Mesh1P->GetRelativeLocation();
-	FRotator CurrentRotation = CurrentOwner->Mesh1P->GetRelativeRotation();
-
-	FVector LocationOffset = FVector(90.0f, 0.0f, 60.0f);
-	FRotator RotationOffset = FRotator(0.0f, 90.0f, 0.0f);*/
-
 	CurrentAmmoCount = MaxAmmo;
 	SetAmmoPercentage();
 	bIsReloading = false;

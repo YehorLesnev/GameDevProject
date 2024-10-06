@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
+#include "Misc/OutputDeviceNull.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 
 // Sets default values
@@ -179,15 +180,26 @@ void AJungle_Bullet::Explode()
 		true
 	);
 
-	// Find all actors in the explosion radius
 	TArray<AActor*> OverlappingActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), OverlappingActors);
+	UKismetSystemLibrary::SphereOverlapActors(
+		this,
+		Location,
+		ExplosionRadius * 10,
+		TArray<TEnumAsByte<EObjectTypeQuery>>(),
+		AActor::StaticClass(),
+		TArray<AActor*>(),  // Actors to ignore
+		OverlappingActors
+	);
 
 	for (AActor* Actor : OverlappingActors)
-	{
+	{		
 		// Check if the actor has a primitive component and if it's simulating physics
 		TArray<UPrimitiveComponent*> Components;
 		Actor->GetComponents<UPrimitiveComponent>(Components);
+
+		FOutputDeviceNull ar;
+		const FString command = FString::Printf(TEXT("ApplyDamage %f"), ExplosionDamage);
+		Actor->CallFunctionByNameWithArguments(*command, ar, NULL, true);
 
 		for (UPrimitiveComponent* Component : Components)
 		{
@@ -200,4 +212,11 @@ void AJungle_Bullet::Explode()
 			}
 		}
 	}
+}
+
+void AJungle_Bullet::Destroyed()
+{
+	Explode();
+
+	Super::Destroyed();
 }
