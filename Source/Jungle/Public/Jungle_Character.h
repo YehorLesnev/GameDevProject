@@ -65,7 +65,7 @@ public:
 		TSubclassOf<UJungle_HUD_Widget> HUDWidgetClass;
 
 	// Pointer to the active HUD
-	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
 		UJungle_HUD_Widget* HUDWidget;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "State")
