@@ -72,6 +72,11 @@ void AJungle_Character::BeginPlay()
 			}
 		}
 	}
+
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->SetAmmoPercentage();
+	}
 }
 
 // Called every frame

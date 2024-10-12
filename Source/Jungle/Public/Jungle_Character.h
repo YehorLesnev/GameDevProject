@@ -47,7 +47,7 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "State")
 		int32 CurrentIndex = 0;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, ReplicatedUsing = OnRep_CurrentWeapon, Category = "State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_CurrentWeapon, Category = "State")
 		class AJungle_Weapon* CurrentWeapon;
 
 	// callsed whenever the current weapon is changed
@@ -78,7 +78,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 		float CurrentHealth;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 		TArray<TSubclassOf<class AJungle_Weapon>> DefaultWeapons;
 
 	UFUNCTION(Server, Reliable)

@@ -195,7 +195,7 @@ void AJungle_Weapon::SetAmmoPercentage()
 			}
 
 			FOutputDeviceNull ar;
-			const FString command = FString::Printf(TEXT("UpdateAmmo %f %d/%d"), percentage, CurrentAmmoCount, MaxAmmo);
+			const FString command = FString::Printf(TEXT("UpdateAmmo %f %d/%d"), percentage, CurrentAmmoCount, OverallAmmo);
 			OwnerCharacter->HUDWidget->CallFunctionByNameWithArguments(*command, ar, NULL, true);
 		}
 	}
@@ -203,7 +203,7 @@ void AJungle_Weapon::SetAmmoPercentage()
 
 void AJungle_Weapon::Reload()
 {
-	if (bIsReloading || CurrentAmmoCount == MaxAmmo)
+	if (bIsReloading || CurrentAmmoCount == MaxAmmo || OverallAmmo <= 0)
 	{
 		return; 
 	}
@@ -234,7 +234,25 @@ void AJungle_Weapon::Reload()
 
 void AJungle_Weapon::FinishReload()
 {
-	CurrentAmmoCount = MaxAmmo;
+	if (OverallAmmo >= MaxAmmo)
+	{
+		OverallAmmo -= (MaxAmmo - CurrentAmmoCount);
+		CurrentAmmoCount = MaxAmmo;
+	}
+	else
+	{
+		if (CurrentAmmoCount + OverallAmmo <= MaxAmmo)
+		{
+			CurrentAmmoCount += OverallAmmo;
+			OverallAmmo = 0;
+		}
+		else
+		{
+			OverallAmmo -= (MaxAmmo - CurrentAmmoCount);
+			CurrentAmmoCount = MaxAmmo;
+		}
+	}
+
 	SetAmmoPercentage();
 	bIsReloading = false;
 	CurrentOwner->IsReloading = false;

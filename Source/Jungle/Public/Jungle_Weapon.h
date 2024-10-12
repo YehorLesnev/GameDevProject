@@ -57,6 +57,12 @@ public:
 		int MaxAmmo = 30;  
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
+		int OverallAmmo;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Configuration")
+		int CurrentAmmoCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Configuration")
 		FTransform PlacementTransform;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
@@ -93,6 +99,4 @@ private:
 	void HandleFiring();
 
 	void SingleFire();
-
-	int CurrentAmmoCount;
 };
