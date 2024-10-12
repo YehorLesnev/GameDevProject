@@ -76,6 +76,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spiral")
         float SpiralSpeed = 3000.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+        float ImpulseForce = 300.0f;
+
     // Function to handle ricochet logic
     void HandleRicochet(const FHitResult& HitResult);
 

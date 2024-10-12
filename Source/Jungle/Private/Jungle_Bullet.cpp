@@ -110,7 +110,7 @@ void AJungle_Bullet::OnBulletHit(UPrimitiveComponent* HitComponent, AActor* Othe
 		UGameplayStatics::ApplyPointDamage(OtherActor, Damage, GetVelocity().GetSafeNormal(), Hit, GetInstigatorController(), this, nullptr);
 
 		if (OtherComp->IsSimulatingPhysics())
-			OtherComp->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+			OtherComp->AddImpulseAtLocation(GetVelocity().GetSafeNormal() * ImpulseForce, Hit.ImpactPoint);
 
 		if (CurrentRicochetCount < MaxRicochets)
 		{
