@@ -195,7 +195,7 @@ void AJungle_Weapon::SetAmmoPercentage()
 			}
 
 			FOutputDeviceNull ar;
-			const FString command = FString::Printf(TEXT("UpdateAmmoBar %f"), percentage);
+			const FString command = FString::Printf(TEXT("UpdateAmmo %f %d/%d"), percentage, CurrentAmmoCount, MaxAmmo);
 			OwnerCharacter->HUDWidget->CallFunctionByNameWithArguments(*command, ar, NULL, true);
 		}
 	}
