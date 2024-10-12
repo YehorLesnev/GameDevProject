@@ -75,7 +75,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 		float MaxHealth = 100.0f;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 		float CurrentHealth;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Configuration")
